@@ -13,6 +13,9 @@ import { TypeOrmConfigAsync } from "configuration/TypeormConfig";
 import { AuditTrailModule } from './audit-trail/audit-trail.module';
 import { BarangayEmployeeModule } from './barangay_employee/barangay_employee.module';
 import { MailerModule } from "@nestjs-modules/mailer";
+import { PurokModule } from './purok/purok.module';
+import { ResidentModule } from './barangay-profile/resident/resident.module';
+import { HouseholdModule } from './barangay-profile/household/household.module';
 
 @Module({
   imports: [
@@ -38,7 +41,15 @@ import { MailerModule } from "@nestjs-modules/mailer";
 
     // logs side
     AuditTrailModule,
+
+    //setup
     BarangayEmployeeModule,
+    PurokModule,
+
+
+    //barngay profile
+    ResidentModule,
+    HouseholdModule,
   ],
   controllers: [AppController],
   providers: [

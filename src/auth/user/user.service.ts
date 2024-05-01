@@ -231,7 +231,7 @@ export class UserService {
   async resetPassword(email: string) {
     var model = await this.userRepo.findOne({ mobile_email: email });
 
-    if (!model) return "Email address does not exist.";
+    if (!model) return "Email address or number does not exist.";
 
     // model.password = model.default_pass;
     // model.first_login = true;
