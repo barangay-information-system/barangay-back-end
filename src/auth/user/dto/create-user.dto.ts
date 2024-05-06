@@ -24,6 +24,9 @@ export class CreateUserDto {
   purok: string;
 
   @ApiProperty()
+  fullName: string;
+
+  @ApiProperty()
   department: string;
   @ApiProperty()
   position: string;

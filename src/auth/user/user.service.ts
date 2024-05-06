@@ -8,15 +8,19 @@ import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { BarangayEmployee } from "src/barangay_employee/entities/barangay_employee.entity";
+import { MailService } from "src/mail/mail.service";
+import { Otp } from "src/otp/entities/otp.entity";
 
 @Injectable()
 export class UserService {
   constructor(
     private jwtService: JwtService,
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    @InjectRepository(Otp) private readonly otpRepo: Repository<Otp>,
     @InjectRepository(BarangayEmployee)
     private readonly empRepo: Repository<BarangayEmployee>,
-    private config: ConfigService
+    private config: ConfigService,
+    private mailerService: MailService
   ) {}
 
   async Create(dto: CreateUserDto) {
@@ -46,6 +50,7 @@ export class UserService {
     dto.civil_status = emp.civil_status;
     dto.barangay = emp.barangay;
     dto.purok = emp.purok;
+    dto.fullName = this.getFullName(dto);
 
     dto.department = emp.department;
     dto.position = emp.position;
@@ -229,15 +234,70 @@ export class UserService {
     };
   }
   async resetPassword(email: string) {
-    var model = await this.userRepo.findOne({ mobile_email: email });
+    var _user = await this.userRepo.findOne({ mobile_email: email });
 
-    if (!model) return "Email address or number does not exist.";
+    const otpCode = this.generateAlphaNumeric();
+    const currTime = new Date();
+    const payload = {
+      mobile_email: email,
+      code: otpCode,
+      expired_at: new Date(currTime.setMinutes(currTime.getMinutes() + 5)),
+    };
+    // 
 
-    // model.password = model.default_pass;
-    // model.first_login = true;
+    if (!_user) return "Email address or number does not exist.";
 
-    var response = await this.userRepo.save(model);
+    const otp = this.otpRepo.create(payload);
+    const success = this.otpRepo.save(otp);
+
+    this.mailerService.sendCodeEmail(otpCode, _user);
+
+    return _user;
+  }
+
+
+  async setPasswordDefault(mobile_email: string){
+    var _user = await this.userRepo.findOne({ mobile_email: mobile_email });
+    
+    // _user.password = _user.0;
+    _user.isFirstTime = true;
+
+    var response = await this.userRepo.save(_user);
 
     return response;
+  }
+
+  generateAlphaNumeric(): string {
+    const length = 6;
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+
+    return result;
+  }
+  getFullName(dto: CreateUserDto): string {
+    let fullName = "";
+
+
+    // if (dto.prefix) {
+    //   fullName += dto.prefix + " ";
+    // }
+
+    fullName += dto.lastname + ", " + dto.firstname;
+
+    if (dto.middlename) {
+      fullName += " " + dto.middlename.charAt(0) + ".";
+    }
+
+    if (dto.suffix) {
+      fullName += " " + dto.suffix;
+    }
+
+    return fullName;
   }
 }

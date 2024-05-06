@@ -6,7 +6,7 @@ import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import { UserModule } from "./auth/user/user.module";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { TransformInterceptor } from "./interceptors/response-interceptor";
 import { TypeOrmConfigAsync } from "configuration/TypeormConfig";
@@ -16,6 +16,8 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { PurokModule } from './purok/purok.module';
 import { ResidentModule } from './barangay-profile/resident/resident.module';
 import { HouseholdModule } from './barangay-profile/household/household.module';
+import { MailModule } from './mail/mail.module';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -27,15 +29,7 @@ import { HouseholdModule } from './barangay-profile/household/household.module';
     UserModule,
     AuthModule,
     SwaggerModule,
-    // MailerModule.forRoot({
-    //   transport: {
-    //     host: process.env.EMAIL_HOST,
-    //     auth: {
-    //       user: process.env.EMAIL_USERNAME,
-    //       pass: process.env.EMAIL_PASSWORD,
-    //     },
-    //   },
-    // }),
+    
     // setup sides
 
 
@@ -50,6 +44,8 @@ import { HouseholdModule } from './barangay-profile/household/household.module';
     //barngay profile
     ResidentModule,
     HouseholdModule,
+    MailModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [

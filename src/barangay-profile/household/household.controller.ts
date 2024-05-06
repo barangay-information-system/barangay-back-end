@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { HouseholdService } from './household.service';
 import { CreateHouseholdDto } from './dto/create-household.dto';
 import { UpdateHouseholdDto } from './dto/update-household.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('household')
+@ApiTags("Household")
+@Controller({ path: "household", version: "1" })
 export class HouseholdController {
   constructor(private readonly householdService: HouseholdService) {}
 

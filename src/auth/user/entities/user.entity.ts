@@ -27,6 +27,8 @@ export class User extends CommonEntity {
   barangay: string;
   @Column({ nullable: true })
   purok: string;
+  @Column({ nullable: true })
+  fullName: string;
 
   @Column({ nullable: true })
   department: string;

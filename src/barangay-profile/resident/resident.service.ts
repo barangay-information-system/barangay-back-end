@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Resident } from "./entities/resident.entity";
 import { Purok } from "src/purok/entities/purok.entity";
+import { MailService } from "src/mail/mail.service";
 
 @Injectable()
 export class ResidentService {
@@ -12,7 +13,7 @@ export class ResidentService {
     @InjectRepository(Resident)
     private readonly repo: Repository<Resident>,
     @InjectRepository(Purok)
-    private readonly purokRepo: Repository<Purok>
+    private readonly purokRepo: Repository<Purok>,
   ) {}
 
   async create(dto: CreateResidentDto) {
