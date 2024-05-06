@@ -187,7 +187,7 @@ export class UserService {
           // role: _user.roleId,
         },
         {
-          // expiresIn: TOKEN_TIME,
+          expiresIn: 86400,
           secret: TOKEN_KEY,
         }
       ),
@@ -198,7 +198,7 @@ export class UserService {
           // role: _user.roleId,
         },
         {
-          // expiresIn: REFRESH_TOKEN_TIME,
+          expiresIn: 172800,
           secret: REFRESH_TOKEN_KEY,
         }
       ),
